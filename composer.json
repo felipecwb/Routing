@@ -1,0 +1,27 @@
+{
+    "name": "felipecwb/routing",
+    "type": "library",
+    "description": "More One Simple Router for PHP.",
+    "keywords": ["routing", "router"],
+    "homepage": "https://github.com/felipecwb/Routing",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Felipe Francisco",
+            "email": "felipe.cwb@hotmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.2.*",
+        "squizlabs/php_codesniffer": "*",
+        "phpmd/phpmd": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Felipecwb\\Routing\\": "lib/"
+        }
+    }
+}
