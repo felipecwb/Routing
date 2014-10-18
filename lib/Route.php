@@ -43,9 +43,14 @@ class Route
     private $pattern;
     /**
      * Whatever can be called
-     * @var callable 
+     * @var callable
      */
     private $target;
+    /**
+     * Arguments of target
+     * @var array
+     */
+    private $arguments = [];
     /**
      * Rules to this Route
      * @var Rules|null
@@ -64,7 +69,7 @@ class Route
             throw new \InvalidArgumentException('$path must be string!');
         }
         $this->pattern  = $pattern;
-        $this->target = $target;
+        $this->target   = $target;
     }
 
     /**
@@ -84,6 +89,14 @@ class Route
     }
 
     /**
+     * @return array
+     */
+    public function getArguments()
+    {
+        return $this->arguments;
+    }
+
+    /**
      * @return Rules
      */
     public function getRules()
@@ -92,6 +105,16 @@ class Route
             return $this->rules = new ConcreteRules(true);
         }
         return $this->rules;
+    }
+
+    /**
+     * @param array $arguments
+     * @return Route
+     */
+    public function setArguments(array $arguments = [])
+    {
+        $this->arguments = $arguments;
+        return $this;
     }
 
     /**
@@ -108,8 +131,8 @@ class Route
      * @param  array $arguments Arguments os callable target.
      * @return mixed
      */
-    public function call(array $arguments = array())
+    public function call()
     {
-        return call_user_func_array($this->getTarget(), $arguments);
+        return call_user_func_array($this->getTarget(), $this->getArguments());
     }
 }

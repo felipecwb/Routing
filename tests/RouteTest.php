@@ -73,7 +73,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $route->call();
     }
 
-    public function testCallTargetWithParameter()
+    public function testCallTargetWithArguments()
     {
         $name = "Felipe";
         $this->expectOutputString("Hello {$name}!");
@@ -81,13 +81,13 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $route = new Route('#/hello/([a-z])#', function ($n) {
             echo "Hello {$n}!";
         });
-
-        $route->call([
+        $route->setArguments([
             $name
         ]);
+        $route->call();
     }
 
-    public function testCallTargetWithNParameters()
+    public function testCallTargetWithNArguments()
     {
         $name     = "Felipe";
         $nickname = "felipecwb";
@@ -96,11 +96,11 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $route = new Route('#^/hello/([a-z])/([a-z0-9])$#i', function ($n1, $n2) {
             echo "Hello {$n1} ({$n2})!";
         });
-
-        $route->call([
+        $route->setArguments([
             $name,
             $nickname
         ]);
+        $route->call();
     }
 
     public function testCallTargetWithReturn()
@@ -108,7 +108,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $route = new Route('#/upper/(.*)#i', function ($str) {
             return strtoupper($str);
         });
-        $result = $route->call(["testing"]);
+        $route->setArguments(["testing"]);
+        $result = $route->call();
 
         $this->assertEquals("TESTING", $result);
     }

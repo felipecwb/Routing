@@ -26,65 +26,72 @@
 
 namespace Felipecwb\Routing;
 
-use Felipecwb\Routing\Exception\RouteNotFoundException;
-
 /**
- * Router
+ * RouteCollection
  *
  * @author felipecwb
  */
-class Router
+class RouteCollection implements \Iterator
 {
     /**
-     * @var RouteCollection
+     * @var int
      */
-    private $collection;
+    private $position = 0;
+    /**
+     * @var Route[]
+     */
+    private $routes = [];
 
-    public function __construct()
+    /**
+     * @param Route[] $routes
+     */
+    public function __construct(array $routes = [])
     {
-        $this->collection = new RouteCollection();
+        foreach ($routes as $route) {
+            $this->add($route);
+        }
     }
 
     /**
-     * Caution! It's override the previous collection if exists!
-     * @param RouteCollection $collection
+     * Add a new Route to collection
+     * @param Route $route
      */
-    public function addCollection(RouteCollection $collection)
-    {
-        $this->collection = $collection;
-    }
-
     public function add(Route $route)
     {
-        $this->collection->add($route);
-        return $route;
+        $this->routes[] = $route;
     }
 
     /**
-     * Find a Route
-     * @param string $path String to be matched by pattern
      * @return Route
      */
-    public function find($path)
+    public function current()
     {
-        $found = null;
+        return $this->routes[$this->position];
+    }
 
-        foreach ($this->collection as $route) {
-            if (! $route->getRules()->isValid()) {
-                continue;
-            }
-            if (preg_match($route->getPattern(), $path, $matches)) {
-                array_shift($matches);
-                $route->setArguments($matches);
-                $found = $route;
-                break;
-            }
-        }
+    /**
+     * @return int
+     */
+    public function key()
+    {
+        return $this->position;
+    }
 
-        if ($found === null) {
-            throw new RouteNotFoundException("Route Not Found by Match!");
-        }
+    public function next()
+    {
+        ++$this->position;
+    }
 
-        return $found;
+    public function rewind()
+    {
+        $this->position = 0;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function valid()
+    {
+        return isset($this->routes[$this->position]);
     }
 }
