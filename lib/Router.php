@@ -63,6 +63,7 @@ class Router
     /**
      * Find a Route
      * @param string $path String to be matched by pattern
+     * @throws RouteNotFoundException
      * @return Route
      */
     public function find($path)
@@ -70,10 +71,10 @@ class Router
         $found = null;
 
         foreach ($this->collection as $route) {
-            if (! $route->getRules()->isValid()) {
-                continue;
-            }
-            if (preg_match($route->getPattern(), $path, $matches)) {
+            if (
+                $route->getRules()->isValid()
+                && preg_match($route->getPattern(), $path, $matches)
+            ) {
                 array_shift($matches);
                 $route->setArguments($matches);
                 $found = $route;

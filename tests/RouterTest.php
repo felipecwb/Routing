@@ -102,7 +102,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $router->add($route);
 
         $result = $router->find('/home');
-
+        $this->assertSame($route, $result);
+        $result = $router->find('/home/');
         $this->assertSame($route, $result);
     }
 
