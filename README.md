@@ -6,7 +6,7 @@ More one simple Routing library for PHP.
 *You'll need know about Regex Patterns.*
 
 ## Instalation
-**[Composer](https://packagist.org/packages/felipecwb/routing)**:
+[Composer](https://packagist.org/packages/felipecwb/routing):
 ```json
 {
     "felipecwb/routing": "dev-master"
