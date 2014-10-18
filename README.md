@@ -1,11 +1,19 @@
 Routing
 =======
 
-More One Simple Router for PHP.
+More one simple Routing library for PHP.
 
 *You'll need know about Regex Patterns.*
 
-Example:
+## Instalation
+**[Composer](https://packagist.org/packages/felipecwb/routing)**:
+```json
+{
+    "felipecwb/routing": "dev-master"
+}
+```
+
+**Example**:
 ```php
 <?php
 
@@ -26,7 +34,7 @@ $route = $router->find('/hello/felipecwb');
 $route->call(); // output: Hellow felipecwb!
 ```
 
-### Contributions
+## Contributions
 
 **Feel free to contribute.**
 
