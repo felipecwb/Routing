@@ -1,11 +1,11 @@
 Routing
 =======
 
-[![Build Status](https://travis-ci.org/felipecwb/Routing.svg?branch=master)](https://travis-ci.org/felipecwb/Routing)
+[![Build Status](https://travis-ci.org/felipecwb/Routing.svg?branch=develop)](https://travis-ci.org/felipecwb/Routing)
 
 More one simple Routing library for PHP.
 
-*You'll need know about Regex Patterns.*
+*You'll need know about [Regex Patterns](http://php.net/manual/en/pcre.pattern.php).*
 
 ## Instalation
 [Composer](https://packagist.org/packages/felipecwb/routing):
