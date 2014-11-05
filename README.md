@@ -2,6 +2,9 @@ Routing
 =======
 
 [![Build Status](https://travis-ci.org/felipecwb/Routing.svg?branch=master)](https://travis-ci.org/felipecwb/Routing)
+[![Latest Stable Version](https://poser.pugx.org/felipecwb/routing/v/stable.svg)](https://packagist.org/packages/felipecwb/routing)
+[![License](https://poser.pugx.org/felipecwb/routing/license.svg)](https://packagist.org/packages/felipecwb/routing)
+
 
 More one simple Routing library for PHP.
 
