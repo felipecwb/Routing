@@ -26,6 +26,8 @@
 
 namespace Felipecwb\Routing;
 
+use Felipecwb\Routing\Resolver\CallableResolver;
+
 /**
  * MatcherTest
  *
@@ -70,7 +72,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(__NAMESPACE__ . '\Route', $route);
         
         $this->expectOutputString('Hello!');
-        $route->call();
+        $route->call(new CallableResolver());
     }
 
     /**

@@ -27,6 +27,8 @@
 namespace Felipecwb\Routing;
 
 use Felipecwb\Routing\Exception\RouteNotFoundException;
+use Felipecwb\Routing\Resolver\Resolver;
+use Felipecwb\Routing\Exception\ResolverException;
 
 /**
  * Router
@@ -39,14 +41,19 @@ class Router
      * @var Matcher
      */
     private $matcher;
+    /**
+     * @var Resolver
+     */
+    private $resolver;
 
     /**
      * Router
      * @param Matcher $matcher
      */
-    public function __construct(Matcher $matcher)
+    public function __construct(Matcher $matcher, Resolver $resolver)
     {
         $this->setMatcher($matcher);
+        $this->setResolver($resolver);
     }
 
     /**
@@ -56,6 +63,15 @@ class Router
     public function setMatcher(Matcher $matcher)
     {
         $this->matcher = $matcher;
+    }
+
+    /**
+     * Caution! It's override the previous matcher if exists!
+     * @param Resolver $resolver
+     */
+    public function setResolver(Resolver $resolver)
+    {
+        $this->resolver = $resolver;
     }
 
     /**
@@ -78,5 +94,21 @@ class Router
     public function match($path)
     {
         return $this->matcher->match($path);
+    }
+
+    /**
+     * A shortcut to Router::match($path)->call(new Resolver())
+     * 
+     * @param string $path      String to be matched by pattern
+     * @param string $arguments Additional arguments to target.
+     * 
+     * @throws RouteNotFoundException
+     * @throws ResolverException
+     * 
+     * @return mixed 
+     */
+    public function dispatch($path, array $arguments = [])
+    {
+        return $this->match($path)->call($this->resolver, $arguments);
     }
 }

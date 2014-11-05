@@ -27,10 +27,10 @@
 namespace Felipecwb\Routing\Exception;
 
 /**
- * RouteNotFoundException
+ * Description of ResolverException
  *
  * @author felipecwb
  */
-class RouteNotFoundException extends \Exception
+class ResolverException extends \RuntimeException
 {
 }

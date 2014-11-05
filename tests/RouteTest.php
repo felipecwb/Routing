@@ -26,6 +26,8 @@
 
 namespace Felipecwb\Routing;
 
+use Felipecwb\Routing\Resolver\CallableResolver;
+
 /**
  * RouteTest
  *
@@ -70,7 +72,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $route = new Route('#/#', function () {
             echo "It's Work!";
         });
-        $route->call();
+        $route->call(new CallableResolver());
     }
 
     public function testCallTargetWithArguments()
@@ -84,7 +86,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $route->setArguments([
             $name
         ]);
-        $route->call();
+        $route->call(new CallableResolver());
     }
 
     public function testCallTargetWithNArguments()
@@ -100,7 +102,27 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             $name,
             $nickname
         ]);
-        $route->call();
+        $route->call(new CallableResolver());
+    }
+
+    public function testCallTargetWithMoreArguments()
+    {
+        $name     = "Felipe";
+        $nickname = "felipecwb";
+        $extraStr = 'hahahahahahah!';
+        $this->expectOutputString("Hello {$name} ({$nickname})! {$extraStr}");
+
+        $route = new Route('#^/hello/([a-z])/([a-z0-9])$#i', function ($n1, $n2, $extraStr) {
+            echo "Hello {$n1} ({$n2})! {$extraStr}";
+        });
+        $route->setArguments([
+            $name,
+            $nickname
+        ]);
+        $route->call(
+            new CallableResolver(),
+            [$extraStr]
+        );
     }
 
     public function testCallTargetWithReturn()
@@ -109,7 +131,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             return strtoupper($str);
         });
         $route->setArguments(["testing"]);
-        $result = $route->call();
+        $result = $route->call(new CallableResolver());
 
         $this->assertEquals("TESTING", $result);
     }
