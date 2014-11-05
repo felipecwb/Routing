@@ -29,54 +29,69 @@ namespace Felipecwb\Routing;
 use Felipecwb\Routing\Exception\RouteNotFoundException;
 
 /**
- * Router
+ * Matcher
  *
  * @author felipecwb
  */
-class Router
+class Matcher
 {
     /**
-     * @var Matcher
+     * @var RouteCollection
      */
-    private $matcher;
+    private $collection;
 
     /**
-     * Router
-     * @param Matcher $matcher
+     * Matcher
+     * @param RouteCollection $collection
      */
-    public function __construct(Matcher $matcher)
+    public function __construct(RouteCollection $collection)
     {
-        $this->setMatcher($matcher);
+        $this->setCollection($collection);
     }
 
     /**
-     * Caution! It's override the previous matcher if exists!
-     * @param Matcher $matcher
+     * Caution! It's override the previous collection if exists!
+     * @param RouteCollection $collection
      */
-    public function setMatcher(Matcher $matcher)
+    public function setCollection(RouteCollection $collection)
     {
-        $this->matcher = $matcher;
+        $this->collection = $collection;
     }
 
     /**
-     * Add a route to collection
-     * @param Route $route
-     * @return Route The route was added
+     * @return RouteCollection
      */
-    public function add(Route $route)
+    public function getCollection()
     {
-        $this->matcher->getCollection()->add($route);
-        return $route;
+        return $this->collection;
     }
 
     /**
-     * Match a Route
+     * find a router by matched path
      * @param string $path String to be matched by pattern
-     * @throws RouteNotFoundException
      * @return Route
+     * @throws RouteNotFoundException
      */
     public function match($path)
     {
-        return $this->matcher->match($path);
+        $found = null;
+
+        foreach ($this->collection as $route) {
+            if (
+                $route->getRules()->isValid()
+                && preg_match($route->getPattern(), $path, $matches)
+            ) {
+                array_shift($matches);
+                $route->setArguments($matches);
+                $found = $route;
+                break;
+            }
+        }
+
+        if ($found === null) {
+            throw new RouteNotFoundException("{$path} not found!");
+        }
+
+        return $found;
     }
 }
