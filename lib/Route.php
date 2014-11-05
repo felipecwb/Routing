@@ -28,6 +28,7 @@ namespace Felipecwb\Routing;
 
 use Felipecwb\Routing\Rules\Rules;
 use Felipecwb\Routing\Rules\ConcreteRules;
+use Felipecwb\Routing\Resolver\Resolver;
 
 /**
  * Route
@@ -63,7 +64,7 @@ class Route
      * @param string   $pattern  A regex to be matched.
      * @param callable $target All thing that can be called.
      */
-    public function __construct($pattern, callable $target)
+    public function __construct($pattern, $target)
     {
         if (! is_string($pattern)) {
             throw new \InvalidArgumentException('$path must be string!');
@@ -128,11 +129,13 @@ class Route
     }
 
     /**
-     * @param  array $arguments Arguments os callable target.
+     * @param  Resolver $resolver  Resolver to treat the target
+     * @param  array    $arguments Additional arguments to target.
      * @return mixed
      */
-    public function call()
+    public function call(Resolver $resolver, array $arguments = [])
     {
-        return call_user_func_array($this->getTarget(), $this->getArguments());
+        $arguments = array_merge($this->getArguments(), $arguments);
+        return $resolver->handle($this->getTarget(), $arguments);
     }
 }

@@ -24,13 +24,21 @@
  * THE SOFTWARE.
  */
 
-namespace Felipecwb\Routing\Exception;
+namespace Felipecwb\Routing\Resolver;
 
 /**
- * RouteNotFoundException
+ * Resolver
  *
  * @author felipecwb
  */
-class RouteNotFoundException extends \Exception
+interface Resolver
 {
+    /**
+     * Handle the Route's target
+     * @param mixed $target Route's target
+     * @param array $arguments [optional] extra arguments to function
+     * @return mixed
+     * @throws ResolverException
+     */
+    public function handle($target, array $arguments = []);
 }

@@ -1,0 +1,76 @@
+<?php
+
+/*
+ * The MIT License
+ *
+ * Copyright 2014 felipecwb.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+namespace Felipecwb\Routing\Resolver;
+
+/**
+ * CallableResolverTest
+ *
+ * @author felipecwb
+ */
+class CallableResolverTest extends \PHPUnit_Framework_TestCase
+{
+    protected function assertPreConditions()
+    {
+        $this->assertTrue(class_exists(__NAMESPACE__ . '\CallableResolver'));
+        $class = new CallableResolver();
+        $this->assertInstanceOf(__NAMESPACE__ . '\Resolver', $class);
+    }
+
+    public function testHandle()
+    {
+        $this->expectOutputString('Hello world!');
+
+        $resolver = new CallableResolver();
+        $resolver->handle(function () {
+            echo 'Hello world!';
+        });
+    }
+
+    public function testHandleWithArguments()
+    {
+        $name = 'Felipe';
+        $city = 'Curitiba';
+        $this->expectOutputString("I'm {$name} from {$city}!");
+
+        $resolver = new CallableResolver();
+        $resolver->handle(
+            function ($name, $city) {
+                echo "I'm {$name} from {$city}!";
+            },
+            [$name, $city]
+        );
+    }
+
+    /**
+     * @expectedException \Felipecwb\Routing\Exception\ResolverException
+     */
+    public function testHandleWithNoCallable()
+    {
+        $resolver = new CallableResolver();
+        $resolver->handle('non-function');
+    }
+}

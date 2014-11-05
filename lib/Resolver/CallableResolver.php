@@ -24,13 +24,26 @@
  * THE SOFTWARE.
  */
 
-namespace Felipecwb\Routing\Exception;
+namespace Felipecwb\Routing\Resolver;
+
+use Felipecwb\Routing\Exception\ResolverException;
 
 /**
- * RouteNotFoundException
+ * CallableResolver
  *
  * @author felipecwb
  */
-class RouteNotFoundException extends \Exception
+class CallableResolver implements Resolver
 {
+    /**
+     * {@inherit}
+     */
+    public function handle($target, array $arguments = array())
+    {
+        if (! is_callable($target)) {
+            throw new ResolverException("Parameter 'target' must be callable!");
+        }
+
+        return call_user_func_array($target, $arguments);
+    }
 }

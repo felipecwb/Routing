@@ -22,10 +22,20 @@ More one simple Routing library for PHP.
 ```php
 <?php
 
+use Felipecwb\Routing\Router;
+use Felipecwb\Routing\Route;
+use Felipecwb\Routing\RouteCollection;
+use Felipecwb\Routing\Matcher;
+use Felipecwb\Routing\Resolver\CallableResolver;
+// Exceptions
+use Felipecwb\Routing\Exception\ResolverException;
+use Felipecwb\Routing\Exception\RouteNotFoundException;
+
 $router = new Router(
     new Matcher(
         new RouteCollection()
-    )
+    ),
+    new CallableResolver()
 );
 
 $router->add(new Route('|/|', function () {
@@ -36,11 +46,23 @@ $router->add(new Route('|/hello/(\w+)|', function ($name) {
     echo "Hello {$name}!";
 });
 
-$route = $router->match('/');
-$route->call(); // output: Hellow World!
-// with arguments
-$route = $router->match('/hello/felipecwb');
-$route->call(); // output: Hellow felipecwb!
+$router->add(new Route('|/article/(\d+)|', function ($id, $extraStr) {
+    echo "Article {$id}! ${extraStr}";
+});
+
+try {
+    $router->dispatch('/'); // output: Hello World!
+    // with arguments
+    $router->dispatch('/hello/felipecwb'); // output: Hello felipecwb!
+    // with extra arguments
+    $router->dispatch('/hello/10', ['Extra String!']); // output: Article 10! Extra String!
+} catch (RouteNotFoundException $e) {
+    echo "Sorry! The target can not be found!";
+} catch (ResolverException $e) {
+    echo "Sorry! The target can not be executed!";
+}
+
+die;
 ```
 
 [Look in tests for more explanation](tests)
