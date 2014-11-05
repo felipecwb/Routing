@@ -41,14 +41,22 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     public function testInstance()
     {
-        $route = new Router();
+        $router = new Router(
+            new Matcher(
+                new RouteCollection()
+            )
+        );
 
-        $this->assertInstanceOf(__NAMESPACE__ . '\Router', $route);
+        $this->assertInstanceOf(__NAMESPACE__ . '\Router', $router);
     }
 
     public function testAddRoute()
     {
-        $router = new Router();
+        $router = new Router(
+            new Matcher(
+                new RouteCollection()
+            )
+        );
         $r1 = $router->add(new Route('|/home(.*)|', function () {
             echo "Welcome!";
         }));
@@ -60,36 +68,26 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(__NAMESPACE__ . '\Route', $r1);
         $this->assertInstanceOf(__NAMESPACE__ . '\Route', $r2);
         $this->assertAttributeInstanceOf(
-            __NAMESPACE__ . '\RouteCollection', 'collection', $router
+            __NAMESPACE__ . '\Matcher', 'matcher', $router
         );
-    }
-
-    public function testAddCollection()
-    {
-        $collection = new RouteCollection();
-        $collection->add(new Route('|/home[/]|', function () {}));
-        $collection->add(new Route('|/about[/]|', function () {}));
-        $collection->add(new Route('|/contact[/]|', function () {}));
-
-        $router = new Router();
-        $router->addCollection($collection);
-        
-        $this->assertAttributeSame($collection, 'collection', $router);
     }
 
     /**
      * @dataProvider providerTestFind
      */
-    public function testFind($path)
+    public function testMatch($path)
     {
-        $router = new Router();
-        $router->addCollection(new RouteCollection([
-            new Route('|/home[/]?|', function () {return '/home';}),
-            new Route('|/about[/]?|', function () {return '/about';}),
-            new Route('|/contact[/]?|', function () {return '/contact';})
-        ]));
+        $router = new Router(
+            new Matcher(
+                new RouteCollection([
+                    new Route('|/home[/]?|', function () {return '/home';}),
+                    new Route('|/about[/]?|', function () {return '/about';}),
+                    new Route('|/contact[/]?|', function () {return '/contact';})
+                ])
+            )
+        );
 
-        $route = $router->find($path);
+        $route = $router->match($path);
 
         $this->assertEquals($path, $route->call());
     }
@@ -98,40 +96,47 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $route = new Route('|/home[/]?|', function () {return 'Home!';});
 
-        $router = new Router();
+        $router = new Router(
+            new Matcher(
+                new RouteCollection()
+            )
+        );
         $router->add($route);
 
-        $result = $router->find('/home');
+        $result = $router->match('/home');
         $this->assertSame($route, $result);
-        $result = $router->find('/home/');
+        $result = $router->match('/home/');
         $this->assertSame($route, $result);
     }
 
     public function testFindWithArgument()
     {
-        $router = new Router();
-        $router->addCollection(new RouteCollection([
-            new Route('|/name[s]?(?:/(\d+))?|', function ($id = null) {
-                $names = ['Felipe', 'Peter', 'Mary'];
-                return $id === null
-                    ? $names
-                    : $names[(int) $id - 1];
-            }),
-            (new Route('|/about(?:/(\w+))?|', function ($m) {
-                return "About {$m}!";
-            }))->setRules(new Rules\ConcreteRules(false))
-        ]));
+        $router = new Router(
+            new Matcher(
+                new RouteCollection([
+                    new Route('|/name[s]?(?:/(\d+))?|', function ($id = null) {
+                        $names = ['Felipe', 'Peter', 'Mary'];
+                        return $id === null
+                            ? $names
+                            : $names[(int) $id - 1];
+                    }),
+                    (new Route('|/about(?:/(\w+))?|', function ($m) {
+                        return "About {$m}!";
+                    }))->setRules(new Rules\ConcreteRules(false))
+                ])
+            )
+        );
 
-        $route = $router->find('/names');
+        $route = $router->match('/names');
         $this->assertEquals(['Felipe', 'Peter', 'Mary'], $route->call());
 
-        $route = $router->find('/name/1');
+        $route = $router->match('/name/1');
         $this->assertEquals('Felipe', $route->call());
 
-        $route = $router->find('/name/2');
+        $route = $router->match('/name/2');
         $this->assertEquals('Peter', $route->call());
 
-        $route = $router->find('/name/3');
+        $route = $router->match('/name/3');
         $this->assertEquals('Mary', $route->call());
     }
 
@@ -143,7 +148,11 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $InvalidRules = new Rules\ConcreteRules(false);
         
-        $router = new Router();
+        $router = new Router(
+            new Matcher(
+                new RouteCollection()
+            )
+        );
         $router->add(new Route('|/home[/]?|', function () {return '/home';}))
             ->setRules($InvalidRules);
 
@@ -153,7 +162,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $router->add(new Route('|/contact[/]?|', function () {return '/contact';}))
             ->setRules($InvalidRules);
 
-        $route = $router->find($path);
+        $route = $router->match($path);
 
         $this->assertEquals($path, $route->call());
     }

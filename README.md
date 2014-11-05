@@ -19,7 +19,11 @@ More one simple Routing library for PHP.
 ```php
 <?php
 
-$router = new Router();
+$router = new Router(
+    new Matcher(
+        new RouteCollection()
+    )
+);
 
 $router->add(new Route('|/|', function () {
     echo "Hello World!";
@@ -29,12 +33,14 @@ $router->add(new Route('|/hello/(\w+)|', function ($name) {
     echo "Hello {$name}!";
 });
 
-$route = $router->find('/');
+$route = $router->match('/');
 $route->call(); // output: Hellow World!
 // with arguments
-$route = $router->find('/hello/felipecwb');
+$route = $router->match('/hello/felipecwb');
 $route->call(); // output: Hellow felipecwb!
 ```
+
+[Look in tests for more explanation](tests)
 
 ## Contributions
 
