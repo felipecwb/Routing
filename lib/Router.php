@@ -79,8 +79,9 @@ class Router
      * @param Route $route
      * @return Route The route was added
      */
-    public function add(Route $route)
+    public function add($pattern, $target)
     {
+        $route = new Route($pattern, $target);
         $this->matcher->getCollection()->add($route);
         return $route;
     }
