@@ -81,7 +81,8 @@ class Router
      */
     public function add($pattern, $target)
     {
-        $route = new Route($pattern, $target);
+        $pattern = str_replace('|', '\|', $pattern);
+        $route = new Route('|' . $pattern . '|', $target);
         $this->matcher->getCollection()->add($route);
         return $route;
     }

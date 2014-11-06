@@ -38,20 +38,20 @@ $router = new Router(
     new CallableResolver()
 );
 
-$router->add('|/|', function () {
+$router->add('/', function () {
     echo "Hello World!";
 });
 
-$router->add('|/hello/(\w+)|', function ($name) {
+$router->add('/hello/(\w+)', function ($name) {
     echo "Hello {$name}!";
 });
 
-$router->add('|/article/(\d+)|', function ($id, $extraStr) {
+$router->add('/article/(\d+)', function ($id, $extraStr) {
     echo "Article {$id}! ${extraStr}";
 });
 
 try {
-    $router->dispatch('/'); // output: Hello World!
+    $router->dispatch('/');
     // with arguments
     $router->dispatch('/hello/felipecwb');
     // with extra arguments
