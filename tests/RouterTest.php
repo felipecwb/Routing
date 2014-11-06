@@ -110,6 +110,22 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(__NAMESPACE__ . '\Route', $result);
     }
 
+    public function testMatchWithRegexModifier()
+    {
+        $router = new Router($this->matcher, $this->resolver);
+        $router->add('house^kitchen', function () {
+            return 'My Kitchen in House!';
+        });
+        $router->add('house$garage', function () {
+            return 'My Garage in House!';
+        });
+
+        $result = $router->match('house^kitchen');
+        $this->assertInstanceOf(__NAMESPACE__ . '\Route', $result);
+        $result = $router->match('house$garage');
+        $this->assertInstanceOf(__NAMESPACE__ . '\Route', $result);
+    }
+
     public function testDispatch()
     {
         $router = new Router($this->matcher, $this->resolver);
