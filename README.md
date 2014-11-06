@@ -40,15 +40,15 @@ $router = new Router(
 
 $router->add(new Route('|/|', function () {
     echo "Hello World!";
-});
+}));
 
 $router->add(new Route('|/hello/(\w+)|', function ($name) {
     echo "Hello {$name}!";
-});
+}));
 
 $router->add(new Route('|/article/(\d+)|', function ($id, $extraStr) {
     echo "Article {$id}! ${extraStr}";
-});
+}));
 
 try {
     $router->dispatch('/'); // output: Hello World!
