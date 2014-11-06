@@ -65,17 +65,17 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(__NAMESPACE__ . '\Router', $router);
     }
 
-    public function testAddRoute()
+    public function testAdd()
     {
         $router = new Router($this->matcher, $this->resolver);
 
-        $r1 = $router->add(new Route('|/home(.*)|', function () {
+        $r1 = $router->add('/home(.*)', function () {
             echo "Welcome!";
-        }));
-        $r2 = $router->add(new Route('|/hello(?:/(\w+))?|', function ($n = 'World') {
+        });
+        $r2 = $router->add('/hello(?:/(\w+))?', function ($n = 'World') {
             $n = ' ' . $n;
             echo "Hello{$n}!";
-        }));
+        });
 
         $this->assertInstanceOf(__NAMESPACE__ . '\Route', $r1);
         $this->assertInstanceOf(__NAMESPACE__ . '\Route', $r2);
@@ -89,33 +89,31 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testMatch($path)
     {
-        $this->collection->add(new Route('|/home[/]?|', function () {return '/home';}));
-        $this->collection->add(new Route('|/about[/]?|', function () {return '/about';}));
-        $this->collection->add(new Route('|/contact[/]?|', function () {return '/contact';}));
-
         $router = new Router($this->matcher, $this->resolver);
+        $router->add('/home[/]?', function () {return '/home';});
+        $router->add('/about[/]?', function () {return '/about';});
+        $router->add('/contact[/]?', function () {return '/contact';});
+
         $route = $router->match($path);
 
         $this->assertEquals($path, $route->call(new CallableResolver()));
     }
 
-    public function testMatch2()
+    public function testMatchWithSameDelimitador()
     {
-        $route = new Route('|/home[/]?|', function () {return 'Home!';});
-
         $router = new Router($this->matcher, $this->resolver);
-        $router->add($route);
+        $router->add('home|room', function () {
+            return 'My Room in Home!';
+        });
 
-        $result = $router->match('/home');
-        $this->assertSame($route, $result);
-        $result = $router->match('/home/');
-        $this->assertSame($route, $result);
+        $result = $router->match('home|room');
+        $this->assertInstanceOf(__NAMESPACE__ . '\Route', $result);
     }
 
     public function testDispatch()
     {
         $router = new Router($this->matcher, $this->resolver);
-        $router->add(new Route('|/home[/]?|', function () {return 'Home!';}));
+        $router->add('/home[/]?', function () {return 'Home!';});
 
         $result = $router->dispatch('/home');
         $this->assertEquals('Home!', $result);
@@ -126,7 +124,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     public function testDispatchWithArguments()
     {
         $router = new Router($this->matcher, $this->resolver);
-        $router->add(new Route('|/hello[/]?|', function ($name) {return "Hello {$name}!";}));
+        $router->add('/hello', function ($name) {return "Hello {$name}!";});
 
         $result = $router->dispatch('/hello', ['Felipe']);
         $this->assertEquals('Hello Felipe!', $result);
@@ -140,7 +138,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     public function testDispatchThrowsResolverException()
     {
         $router = new Router($this->matcher, $this->resolver);
-        $router->add(new Route('|/home[/]?|', 'target-not-valid-to-resolver'));
+        $router->add('/home', 'target-not-valid-to-resolver');
 
         $router->dispatch('/home');
     }
@@ -157,21 +155,17 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     public function testMatchWithArgument()
     {
-        $this->collection->add(
-            new Route('|/name[s]?(?:/(\d+))?|', function ($id = null) {
-                $names = ['Felipe', 'Peter', 'Mary'];
-                return $id === null
-                    ? $names
-                    : $names[(int) $id - 1];
-            })
-        );
-        $this->collection->add(
-            (new Route('|/about(?:/(\w+))?|', function ($m) {
-                return "About {$m}!";
-            }))->setRules(new Rules\ConcreteRules(false))
-        );
-
         $router = new Router($this->matcher, $this->resolver);
+
+        $router->add('/name[s]?(?:/(\d+))?', function ($id = null) {
+            $names = ['Felipe', 'Peter', 'Mary'];
+            return $id === null
+                ? $names
+                : $names[(int) $id - 1];
+        });
+        $router->add('/about(?:/(\w+))?', function ($m) {
+            return "About {$m}!";
+        })->setRules(new Rules\ConcreteRules(false));
 
         $resolver = new CallableResolver();
 
@@ -198,13 +192,13 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         
         $router = new Router($this->matcher, $this->resolver);
 
-        $router->add(new Route('|/home[/]?|', function () {return '/home';}))
+        $router->add('/home', function () {return '/home';})
             ->setRules($InvalidRules);
 
-        $router->add(new Route('|/about[/]?|', function () {return '/about';}))
+        $router->add('/about', function () {return '/about';})
             ->setRules($InvalidRules);
 
-        $router->add(new Route('|/contact[/]?|', function () {return '/contact';}))
+        $router->add('/contact', function () {return '/contact';})
             ->setRules($InvalidRules);
 
         $route = $router->match($path);

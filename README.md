@@ -38,24 +38,24 @@ $router = new Router(
     new CallableResolver()
 );
 
-$router->add(new Route('|/|', function () {
+$router->add('/', function () {
     echo "Hello World!";
-}));
+});
 
-$router->add(new Route('|/hello/(\w+)|', function ($name) {
+$router->add('/hello/(\w+)', function ($name) {
     echo "Hello {$name}!";
-}));
+});
 
-$router->add(new Route('|/article/(\d+)|', function ($id, $extraStr) {
+$router->add('/article/(\d+)', function ($id, $extraStr) {
     echo "Article {$id}! ${extraStr}";
-}));
+});
 
 try {
-    $router->dispatch('/'); // output: Hello World!
+    $router->dispatch('/');
     // with arguments
-    $router->dispatch('/hello/felipecwb'); // output: Hello felipecwb!
+    $router->dispatch('/hello/felipecwb');
     // with extra arguments
-    $router->dispatch('/hello/10', ['Extra String!']); // output: Article 10! Extra String!
+    $router->dispatch('/hello/10', ['Extra String!']);
 } catch (RouteNotFoundException $e) {
     echo "Sorry! The target can not be found!";
 } catch (ResolverException $e) {
