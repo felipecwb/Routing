@@ -23,20 +23,11 @@ More one simple Routing library for PHP.
 <?php
 
 use Felipecwb\Routing\Router;
-use Felipecwb\Routing\Route;
-use Felipecwb\Routing\RouteCollection;
-use Felipecwb\Routing\Matcher;
-use Felipecwb\Routing\Resolver\CallableResolver;
 // Exceptions
 use Felipecwb\Routing\Exception\ResolverException;
 use Felipecwb\Routing\Exception\RouteNotFoundException;
 
-$router = new Router(
-    new Matcher(
-        new RouteCollection()
-    ),
-    new CallableResolver()
-);
+$router = Router::createDefault();
 
 $router->add('/', function () {
     echo "Hello World!";

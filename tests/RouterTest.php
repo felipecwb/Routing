@@ -65,6 +65,13 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(__NAMESPACE__ . '\Router', $router);
     }
 
+    public function testStaticCreateDefault()
+    {
+        $router = Router::createDefault();
+
+        $this->assertInstanceOf(__NAMESPACE__ . '\Router', $router);
+    }
+
     public function testAdd()
     {
         $router = new Router($this->matcher, $this->resolver);
