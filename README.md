@@ -5,7 +5,6 @@ Routing
 [![Latest Stable Version](https://poser.pugx.org/felipecwb/routing/v/stable.svg)](https://packagist.org/packages/felipecwb/routing)
 [![License](https://poser.pugx.org/felipecwb/routing/license.svg)](https://packagist.org/packages/felipecwb/routing)
 
-
 More one simple Routing library for PHP.
 
 *You'll need know about [Regex Patterns](http://php.net/manual/en/pcre.pattern.php).*
@@ -23,20 +22,11 @@ More one simple Routing library for PHP.
 <?php
 
 use Felipecwb\Routing\Router;
-use Felipecwb\Routing\Route;
-use Felipecwb\Routing\RouteCollection;
-use Felipecwb\Routing\Matcher;
-use Felipecwb\Routing\Resolver\CallableResolver;
 // Exceptions
 use Felipecwb\Routing\Exception\ResolverException;
 use Felipecwb\Routing\Exception\RouteNotFoundException;
 
-$router = new Router(
-    new Matcher(
-        new RouteCollection()
-    ),
-    new CallableResolver()
-);
+$router = Router::createDefault();
 
 $router->add('/', function () {
     echo "Hello World!";

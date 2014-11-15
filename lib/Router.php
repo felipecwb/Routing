@@ -28,6 +28,7 @@ namespace Felipecwb\Routing;
 
 use Felipecwb\Routing\Exception\RouteNotFoundException;
 use Felipecwb\Routing\Resolver\Resolver;
+use Felipecwb\Routing\Resolver\CallableResolver;
 use Felipecwb\Routing\Exception\ResolverException;
 
 /**
@@ -45,6 +46,20 @@ class Router
      * @var Resolver
      */
     private $resolver;
+
+    /**
+     * Simplify the creation of this instance with default options
+     * @return Router
+     */
+    public static function createDefault()
+    {
+        return new Router(
+            new Matcher(
+                new RouteCollection()
+            ),
+            new CallableResolver()
+        );
+    }
 
     /**
      * Router
