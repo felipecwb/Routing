@@ -49,16 +49,27 @@ class Router
 
     /**
      * Simplify the creation of this instance with default options
+     * @param array $options [optional] Add anothers classes like:
+     *                       (collection|macher|resolver) to create Router.
+     *                       Classes must follow the Rules extending
+     *                       and implement others functionalities
      * @return Router
      */
-    public static function createDefault()
+    public static function create(array $options = [])
     {
-        return new Router(
-            new Matcher(
-                new RouteCollection()
-            ),
-            new CallableResolver()
-        );
+        $options['collection'] = isset($options['collection'])
+                                ? $options['collection']
+                                : new RouteCollection();
+
+        $options['matcher'] = isset($options['matcher'])
+                                ? $options['matcher']
+                                : new Matcher($options['collection']);
+
+        $options['resolver'] = isset($options['resolver'])
+                                ? $options['resolver']
+                                : new CallableResolver();
+
+        return new Router($options['matcher'], $options['resolver']);
     }
 
     /**
