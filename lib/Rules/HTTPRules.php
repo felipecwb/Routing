@@ -94,7 +94,7 @@ class HTTPRules implements Rules
 
     /**
      * Verify if parameter is defined.
-     * @param string $key 
+     * @param string $key
      * @return HTTPRules
      */
     public function hasParameter($key)
@@ -107,7 +107,7 @@ class HTTPRules implements Rules
 
     /**
      * Verify if parameter have value.
-     * @param string $key 
+     * @param string $key
      * @return HTTPRules
      */
     public function assertParameter($key, $value)

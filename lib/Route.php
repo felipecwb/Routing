@@ -60,7 +60,7 @@ class Route
 
     /**
      * Route
-     * 
+     *
      * @param string   $pattern  A regex to be matched.
      * @param callable $target All thing that can be called.
      */

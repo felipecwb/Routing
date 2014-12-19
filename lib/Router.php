@@ -130,14 +130,14 @@ class Router
 
     /**
      * A shortcut to Router::match($path)->call(new Resolver())
-     * 
+     *
      * @param string $path      String to be matched by pattern
      * @param string $arguments Additional arguments to target.
-     * 
+     *
      * @throws RouteNotFoundException
      * @throws ResolverException
-     * 
-     * @return mixed 
+     *
+     * @return mixed
      */
     public function dispatch($path, array $arguments = [])
     {

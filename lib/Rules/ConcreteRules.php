@@ -52,7 +52,7 @@ class ConcreteRules implements Rules
      * $rules = new ConcreteRules();
      * $rules->addRule($otherThing->isTrue())
      *       ->addRule($anotherThing->isFalse());
-     * 
+     *
      * $rules->isValid(); // false
      * </code>
      * @param boolean $valid
