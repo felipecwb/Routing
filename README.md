@@ -26,7 +26,7 @@ use Felipecwb\Routing\Router;
 use Felipecwb\Routing\Exception\ResolverException;
 use Felipecwb\Routing\Exception\RouteNotFoundException;
 
-$router = Router::createDefault();
+$router = Router::create();
 
 $router->add('/', function () {
     echo "Hello World!";
