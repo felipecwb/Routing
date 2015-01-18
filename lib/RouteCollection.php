@@ -34,10 +34,6 @@ namespace Felipecwb\Routing;
 class RouteCollection implements \Iterator
 {
     /**
-     * @var int
-     */
-    private $position = 0;
-    /**
      * @var Route[]
      */
     private $routes = [];
@@ -66,7 +62,7 @@ class RouteCollection implements \Iterator
      */
     public function current()
     {
-        return $this->routes[$this->position];
+        return current($this->routes);
     }
 
     /**
@@ -74,17 +70,17 @@ class RouteCollection implements \Iterator
      */
     public function key()
     {
-        return $this->position;
+        return key($this->routes);
     }
 
     public function next()
     {
-        ++$this->position;
+        return next($this->routes);
     }
 
     public function rewind()
     {
-        $this->position = 0;
+        return reset($this->routes);
     }
 
     /**
@@ -92,6 +88,6 @@ class RouteCollection implements \Iterator
      */
     public function valid()
     {
-        return isset($this->routes[$this->position]);
+        return (bool) $this->current();
     }
 }

@@ -61,13 +61,13 @@ class Route
     /**
      * Route
      *
-     * @param string   $pattern  A regex to be matched.
-     * @param callable $target All thing that can be called.
+     * @param string $pattern  A regex to be matched.
+     * @param mixed  $target   All thing that can be called.
      */
     public function __construct($pattern, $target)
     {
         if (! is_string($pattern)) {
-            throw new \InvalidArgumentException('$path must be string!');
+            throw new \InvalidArgumentException('$pattern must be string!');
         }
         $this->pattern  = $pattern;
         $this->target   = $target;

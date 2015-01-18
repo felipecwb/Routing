@@ -1,5 +1,6 @@
 nbproject/
 vendor/
 composer.lock
-/build
+build/
 .project
+.idea/

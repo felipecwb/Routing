@@ -49,8 +49,8 @@ class Router
 
     /**
      * Simplify the creation of this instance with default options
-     * @param array $options [optional] Add anothers classes like:
-     *                       (collection|macher|resolver) to create Router.
+     * @param array $options [optional] Add another classes like:
+     *                       (collection|matcher|resolver) to create Router.
      *                       Classes must follow the Rules extending
      *                       and implement others functionalities
      * @return Router
@@ -74,7 +74,8 @@ class Router
 
     /**
      * Router
-     * @param Matcher $matcher
+     * @param Matcher  $matcher
+     * @param Resolver $resolver
      */
     public function __construct(Matcher $matcher, Resolver $resolver)
     {
@@ -92,7 +93,7 @@ class Router
     }
 
     /**
-     * Caution! It's override the previous matcher if exists!
+     * Caution! It's override the previous resolver if exists!
      * @param Resolver $resolver
      */
     public function setResolver(Resolver $resolver)
@@ -101,8 +102,10 @@ class Router
     }
 
     /**
-     * Add a route to collection
-     * @param Route $route
+     * Create a route to collection
+     * shortcut to addRoute().
+     * @param string $pattern
+     * @param mixed  $target
      * @return Route The route was added
      */
     public function add($pattern, $target)
@@ -112,8 +115,23 @@ class Router
             ['\|', '\^', '\$'],
             $pattern
         );
-        $route = new Route('|^' . $pattern . '$|', $target);
-        $this->matcher->getCollection()->add($route);
+
+        return $this->addRoute(
+            new Route('|^' . $pattern . '$|', $target)
+        );
+    }
+
+    /**
+     * Add Route to collection
+     * @param Route $route
+     * @return Route The route was added
+     */
+    public function addRoute(Route $route)
+    {
+        $this->matcher
+             ->getCollection()
+             ->add($route);
+
         return $route;
     }
 
@@ -132,7 +150,7 @@ class Router
      * A shortcut to Router::match($path)->call(new Resolver())
      *
      * @param string $path      String to be matched by pattern
-     * @param string $arguments Additional arguments to target.
+     * @param array  $arguments Additional arguments to target.
      *
      * @throws RouteNotFoundException
      * @throws ResolverException
@@ -141,6 +159,7 @@ class Router
      */
     public function dispatch($path, array $arguments = [])
     {
-        return $this->match($path)->call($this->resolver, $arguments);
+        return $this->match($path)
+                    ->call($this->resolver, $arguments);
     }
 }
